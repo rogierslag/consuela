@@ -20,7 +20,7 @@ function checkPayload(req, res) {
   if ( config.get('repos').indexOf(req.body.pull_request.head.repo.full_name) > -1 ) {
     console.log("Received a request for matching repo: " + req.body.pull_request.head.repo.full_name);
     console.log("Action is: " + req.body.action);
-    if ( req.body.action === 'labeled' || req.body.action === 'unlabeled' ) {
+    if ( req.body.action === 'opened' || req.body.action === 'labeled' || req.body.action === 'unlabeled' ) {
       return checkLabels(req, res);
     } else {
       res.writeHead(200, 'OK');
