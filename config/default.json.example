@@ -1,0 +1,19 @@
+{
+  "github":
+    {
+      "username": "inventid-deploy",
+      "password": "<password>"
+    },
+  "tags":
+    [
+      "do not merge",
+      "wip",
+      "work in progress",
+      "needs fix"
+    ],
+  "repos":
+    [
+      "rogierslag/consuela"
+    ]
+}
+
