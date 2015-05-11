@@ -12,7 +12,7 @@ app.post('/', checkPayload);
 
 // And listen!
 var server = app.listen(8543, function () {
-    console.log("Server started listening");
+    console.log("Consuela picked up the phone and started listening");
 });
 
 // Determine whether to do something with the payload
@@ -37,7 +37,6 @@ function checkPayload(req, res) {
 // Determine what we should send back to github
 function checkLabels(req, res) {
   var url = 'https://api.github.com/repos/' + req.body.pull_request.head.repo.full_name + '/issues/' + req.body.pull_request.number + '/labels'
-  console.log(url);
   request({
       url: url,
       json: true,
@@ -51,7 +50,7 @@ function checkLabels(req, res) {
     }
   }, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        if ( body.filter(function(item){ console.log(item); return config.get("tags").indexOf(item.name.toLowerCase()) > -1}).length > 0 ) {
+        if ( body.filter(function(item){ return config.get("tags").indexOf(item.name.toLowerCase()) > -1}).length > 0 ) {
           console.log('Did contain tags to prevent merge');
           reportSuccess(req, res, false);
         } else {
@@ -74,7 +73,6 @@ function reportSuccess(req, res, result) {
   } else {
     body = {state: "error", context: "Consuela", description: "Consuela shouts: This PR should not be merged yet!"};
   }
-  console.log(body);
 
   request.post({
       url: url,
