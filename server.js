@@ -8,12 +8,22 @@ var request = require("request");
 // Create the server
 var app = express();
 app.use(bodyParser.json());
+app.get('/health', checkHealth);
 app.post('/', checkPayload);
 
 // And listen!
 var server = app.listen(8543, function () {
     console.log("Consuela picked up the phone and started listening");
 });
+
+// Check whether we are running and if yes return ok
+function checkHealth(req, res) {
+  res.writeHead(200, 'OK');
+  res.write('Si?');
+  res.end();
+  console.log('Processed successful healthcheck');
+  return;
+}
 
 // Determine whether to do something with the payload
 function checkPayload(req, res) {
