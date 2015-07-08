@@ -27,7 +27,7 @@ function checkHealth(req, res) {
 
 // Determine whether to do something with the payload
 function checkPayload(req, res) {
-  if ( config.get('repos').indexOf(req.body.pull_request.head.repo.full_name) > -1 ) {
+  if ( config.get('repos').indexOf(req.body.pull_request.head.repo.full_name.toLowerCase()) > -1 ) {
     console.log("Received a request for matching repo: " + req.body.pull_request.head.repo.full_name);
     console.log("Action is: " + req.body.action);
     if ( req.body.action === 'opened' || req.body.action === 'labeled' || req.body.action === 'unlabeled' || req.body.action === 'synchronize' ) {
@@ -38,6 +38,7 @@ function checkPayload(req, res) {
       return;
     }
   } else {
+    console.log('Incoming request did not match any repository [' + req.body.pull_request.head.repo.full_name + ']');
     res.writeHead(403, 'Forbidden');
     res.end();
     return;
@@ -59,7 +60,7 @@ function checkLabels(req, res) {
       'User-Agent': 'Consuela https://github.com/rogierslag/consuela'
     }
   }, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
+      if (!error && isValidResponseStatusCode(response.statusCode)) {
         if ( body.filter(function(item){ return config.get("tags").indexOf(item.name.toLowerCase()) > -1}).length > 0 ) {
           console.log('Did contain tags to prevent merge');
           reportSuccess(req, res, false);
@@ -97,7 +98,7 @@ function reportSuccess(req, res, result) {
     },
     body: body
   }, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
+      if (!error && isValidResponseStatusCode(response.statusCode)) {
         res.writeHead(200, 'OK');
         res.end();
       } else {
@@ -107,3 +108,6 @@ function reportSuccess(req, res, result) {
     });
   }
 
+function isValidResponseStatusCode(code) {
+  return code >= 200 && code < 300;
+}
