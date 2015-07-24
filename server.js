@@ -102,6 +102,7 @@ function reportSuccess(req, res, result) {
         res.writeHead(200, 'OK');
         res.end();
       } else {
+        console.log('Received an eror from github: ' + error + ' with response ' + response);
         res.writeHead(500, 'Internal server error');
         res.end();
       }
