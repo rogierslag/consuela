@@ -49,16 +49,12 @@ function checkPayload(req, res) {
 function checkLabels(req, res) {
   var url = 'https://api.github.com/repos/' + req.body.pull_request.head.repo.full_name + '/issues/' + req.body.pull_request.number + '/labels'
   request({
-      url: url,
-      json: true,
-      auth: {
-        user: config.get('github.username'),
-        pass: config.get('github.password'),
-        sendImmediately: true
-    },
+    url: url,
+    json: true,
     headers: {
-      'User-Agent': 'Consuela https://github.com/rogierslag/consuela'
-    }
+      'User-Agent': 'Consuela https://github.com/rogierslag/consuela',
+      'Authorization': 'token ' + config.get('github.oauth_token')
+    },
   }, function (error, response, body) {
       if (!error && isValidResponseStatusCode(response.statusCode)) {
         if ( body.filter(function(item){ return config.get("tags").indexOf(item.name.toLowerCase()) > -1}).length > 0 ) {
@@ -69,6 +65,7 @@ function checkLabels(req, res) {
           reportSuccess(req, res, true);
         }
       } else {
+        console.log('Received an eror from github on url ' + url + ' with body ' + body + ': ' + error + ' (' + response.statusCode + ') with response ' + JSON.stringify(response));
         res.writeHead(500, 'Internal server error');
         res.end();
       }
@@ -86,15 +83,11 @@ function reportSuccess(req, res, result) {
   }
 
   request.post({
-      url: url,
-      json: true,
-      auth: {
-        user: config.get('github.username'),
-        pass: config.get('github.password'),
-        sendImmediately: true
-    },
+    url: url,
+    json: true,
     headers: {
-      'User-Agent': 'Consuela https://github.com/rogierslag/consuela'
+      'User-Agent': 'Consuela https://github.com/rogierslag/consuela',
+      'Authorization': 'token ' + config.get('github.oauth_token')
     },
     body: body
   }, function (error, response, body) {
@@ -102,7 +95,7 @@ function reportSuccess(req, res, result) {
         res.writeHead(200, 'OK');
         res.end();
       } else {
-        console.log('Received an eror from github: ' + error + ' with response ' + response);
+        console.log('Received an eror from github on url ' + url + ' with body ' + body + ': ' + error + ' (' + response.statusCode + ') with response ' + JSON.stringify(response));
         res.writeHead(500, 'Internal server error');
         res.end();
       }
