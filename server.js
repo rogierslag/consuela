@@ -27,6 +27,17 @@ function checkHealth(req, res) {
 
 // Determine whether to do something with the payload
 function checkPayload(req, res) {
+  if ( req.body.zen ) {
+    // This is a github test payload!
+    var validRepo = config.get('repos').indexOf(req.body.repository.full_name.toLowerCase()) > -1;
+    if ( validRepo ) {
+      res.status(200).end();
+    } else {
+      res.status(403).end();
+    }
+    return;
+  }
+
   if ( config.get('repos').indexOf(req.body.pull_request.head.repo.full_name.toLowerCase()) > -1 ) {
     console.log("Received a request for matching repo: " + req.body.pull_request.head.repo.full_name);
     console.log("Action is: " + req.body.action);
