@@ -29,11 +29,12 @@ function checkHealth(req, res) {
 function checkPayload(req, res) {
   if ( req.body.zen ) {
     // This is a github test payload!
+    console.log("Github test payload");
     var validRepo = config.get('repos').indexOf(req.body.repository.full_name.toLowerCase()) > -1;
     if ( validRepo ) {
-      res.status(200).end();
+      res.status(200).write('Well Github, I love you too!').end();
     } else {
-      res.status(403).end();
+      res.status(403).write('This repository is not configured for Consuela').end();
     }
     return;
   }
