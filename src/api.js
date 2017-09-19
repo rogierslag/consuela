@@ -39,7 +39,7 @@ export async function listLabels(repository, pullRequestNumber) {
 		},
 	}, cb));
 
-	if(!isValidResponseStatusCode(response)) {
+	if(!isValidResponseStatusCode(response.statusCode)) {
 		throw response;
 	}
 	return response.body;
