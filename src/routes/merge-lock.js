@@ -19,7 +19,7 @@ export function validateRepo(req, res, next) {
 
 export async function putMergeLock(req, res) {
 	const repo = req.query.repo;
-	const message = req.query.message ? `: ${req.query.message}` : '';
+	const message = req.query.message ? `: ${decodeURIComponent(req.query.message)}` : '';
 	const status = {
 		state : 'error',
 		context : 'Consuela merge-lock',
