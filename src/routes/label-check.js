@@ -42,7 +42,7 @@ export function checkPullRequestBody(req, res, next) {
 	if (config.get('repos').includes(req.body.pull_request.head.repo.full_name.toLowerCase())) {
 		next();
 	} else {
-		log.info(`Incoming request did not match any repository [${req.body.pull_request.head.repo.full_name}]`);
+		log.warn(`Incoming request did not match any repository [${req.body.pull_request.head.repo.full_name}]`);
 		res.sendStatus(403);
 	}
 }
@@ -57,7 +57,7 @@ export default async function checkLabel(req, res) {
 			res.sendStatus(200);
 		}
 		catch (e) {
-			log.info(`Error while checking labels: ${e}`);
+			log.error(`Error while checking labels: ${JSON.stringify(e)}`);
 			res.sendStatus(500);
 		}
 
@@ -67,7 +67,7 @@ export default async function checkLabel(req, res) {
 				res.sendStatus(200);
 			}
 			catch (e) {
-				log.info(`Error while checking labels: ${e}`);
+				log.error(`Error while checking labels: ${JSON.stringify(e)}`);
 				res.sendStatus(500);
 			}
 		}
