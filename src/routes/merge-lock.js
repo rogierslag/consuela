@@ -28,6 +28,7 @@ export async function putMergeLock(req, res) {
 	sharedLock.lock = status;
 	const prShas = await listPullRequestShas(repo);
 	await Promise.all(prShas.map(sha => setStatus(repo, sha, status)));
+	log.info(`Setting a merge lock for repo ${repo} with message: '${message}'`);
 
 	res.sendStatus(200);
 }
@@ -42,6 +43,7 @@ export async function releaseMergeLock(req, res) {
 	};
 	const prShas = await listPullRequestShas(repo);
 	await Promise.all(prShas.map(sha => setStatus(repo, sha, status)));
+	log.info(`Removing merge lock for repo ${repo}`);
 	res.sendStatus(200);
 }
 

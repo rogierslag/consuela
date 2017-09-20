@@ -57,7 +57,7 @@ export default async function checkLabel(req, res) {
 			res.sendStatus(200);
 		}
 		catch (e) {
-			log.error(`Error while checking labels: ${JSON.stringify(e)}`);
+			log.error(`Error while checking labels for individual lock: ${JSON.stringify(e)}`);
 			res.sendStatus(500);
 		}
 
@@ -67,7 +67,7 @@ export default async function checkLabel(req, res) {
 				res.sendStatus(200);
 			}
 			catch (e) {
-				log.error(`Error while checking labels: ${JSON.stringify(e)}`);
+				log.error(`Error while checking labels for shared lock: ${JSON.stringify(e)}`);
 				res.sendStatus(500);
 			}
 		}
