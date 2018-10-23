@@ -52,24 +52,27 @@ export default async function checkLabel(req, res) {
 	log.info(`Action is: ${req.body.action}`);
 	if (supportedActions.includes(req.body.action)) {
 		const pullRequest = req.body.pull_request;
-		try {
-			await checkLabels(pullRequest);
-			res.sendStatus(200);
-		}
-		catch (e) {
-			log.error(`Error while checking labels for individual lock: ${JSON.stringify(e)}`);
-			res.sendStatus(500);
-		}
 
 		if (sharedLock.lock) {
 			try {
 				await setStatus(pullRequest.head.repo.full_name, pullRequest.head.sha, sharedLock.lock);
 				res.sendStatus(200);
+				return;
 			}
 			catch (e) {
-				log.error(`Error while checking labels for shared lock: ${JSON.stringify(e)}`);
+				log.error(`Error while checking labels for shared lock: ${e}`);
 				res.sendStatus(500);
+				return;
 			}
+		}
+
+		try {
+			await checkLabels(pullRequest);
+			res.sendStatus(200);
+		}
+		catch (e) {
+			log.error(`Error while checking labels for individual lock: ${e}`);
+			res.sendStatus(500);
 		}
 	} else {
 		res.sendStatus(200);
