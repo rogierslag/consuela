@@ -1,7 +1,11 @@
-FROM node:8.5.0
+FROM node:8.11
 MAINTAINER Rogier Slag
 
 RUN mkdir /opt/consuela
+
+# Install dumb-init
+RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64.deb
+RUN dpkg -i dumb-init_*.deb
 
 # Set the exposed stuff
 VOLUME /opt/consuela/config
@@ -9,18 +13,18 @@ EXPOSE 8543
 
 # install dependencies
 ADD package.json /opt/consuela/package.json
-ADD package-lock.json /opt/consuela/package-lock.json
+ADD yarn.lock /opt/consuela/yarn.lock
 ADD .babelrc /opt/consuela/.babelrc
 ADD .eslintrc /opt/consuela/.eslintrc
-RUN cd /opt/consuela && npm install
+RUN cd /opt/consuela && yarn install
 
 # Copy source
 COPY src /opt/consuela/src/
 
 WORKDIR /opt/consuela
 # Build output
-RUN npm run build
+RUN yarn build
 
 # Start it!
-CMD ["node", "out/server.js"]
+CMD ["dumb-init", "node", "out/server.js"]
 
