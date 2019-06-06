@@ -20,7 +20,7 @@ export function validateRepo(req, res, next) {
 export function validateSecretKey(req, res, next) {
 	const secretKey = config.get('lockKey');
 	if(!secretKey) {
-		log.warn(`No secret key defined. For a public service this is not very safe!`);
+		log.warn('No secret key defined. For a public service this is not very safe!');
 		next();
 		return;
 	}
@@ -31,7 +31,7 @@ export function validateSecretKey(req, res, next) {
 		return;
 	}
 
-	log.warn(`Incorrect secret key supplied`);
+	log.warn('Incorrect secret key supplied');
 	res.sendStatus(401);
 }
 
