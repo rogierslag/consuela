@@ -1,4 +1,4 @@
-FROM node:8.11
+FROM node:10.16.0
 MAINTAINER Rogier Slag
 
 RUN mkdir /opt/consuela
