@@ -17,6 +17,24 @@ export function validateRepo(req, res, next) {
 	}
 }
 
+export function validateSecretKey(req, res, next) {
+	const secretKey = config.get('lockKey');
+	if(!secretKey) {
+		log.warn(`No secret key defined. For a public service this is not very safe!`);
+		next();
+		return;
+	}
+
+	const suppliedKey = req.query.secret;
+	if(secretKey === suppliedKey) {
+		next();
+		return;
+	}
+
+	log.warn(`Incorrect secret key supplied`);
+	res.sendStatus(401);
+}
+
 export async function putMergeLock(req, res) {
 	const repo = req.query.repo;
 	const message = req.query.message ? `: ${decodeURIComponent(req.query.message)}` : '';
