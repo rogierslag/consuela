@@ -25,6 +25,6 @@ server.on('error', (e) => {
 		log.error(`Address http://localhost:${port} in use!`);
 	}
 	else {
-		log.error(`Something broke! Failed to start listening. Error was ${e}`);
+		log.error('Something broke! Failed to start listening. Error was:', e);
 	}
 });

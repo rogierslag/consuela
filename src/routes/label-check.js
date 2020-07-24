@@ -58,7 +58,7 @@ export default async function checkLabel(req, res) {
 				await setStatus(pullRequest.head.repo.full_name, pullRequest.head.sha, sharedLock.lock);
 			}
 			catch (e) {
-				log.error(`Error while checking labels for shared lock: ${e}`);
+				log.error('Error while checking labels for shared lock:', e);
 				res.sendStatus(500);
 				return;
 			}
@@ -68,7 +68,7 @@ export default async function checkLabel(req, res) {
 			await checkLabels(pullRequest);
 		}
 		catch (e) {
-			log.error(`Error while checking labels for individual lock: ${e}`);
+			log.error('Error while checking labels for individual lock:', e);
 			res.sendStatus(500);
 			return;
 		}
