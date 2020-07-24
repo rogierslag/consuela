@@ -6,6 +6,12 @@ import log from '../log';
 
 const supportedActions = ['opened', 'labeled', 'unlabeled', 'synchronize'];
 
+async function sleep(timeout) {
+	await new Promise(resolve => {
+		setTimeout(resolve, timeout);
+	});
+}
+
 async function checkLabels(pullRequest) {
 	const labels = await listLabels(pullRequest.head.repo.full_name, pullRequest.number);
 
@@ -64,6 +70,8 @@ export default async function checkLabel(req, res) {
 			}
 		}
 
+		// Github hasn't always persisted the labels at this point, so we'll just wait a few seconds
+		await sleep(5000);
 		try {
 			await checkLabels(pullRequest);
 		}
