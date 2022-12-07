@@ -13,9 +13,10 @@ export async function setStatus(repo, sha, status) {
 		method: 'post',
 		headers : {
 			'User-Agent' : 'Consuela https://github.com/rogierslag/consuela',
-			'Authorization' : `token ${config.get('github.oauth_token')}`
+			'Authorization' : `token ${config.get('github.oauth_token')}`,
+			'Content-Type': 'application/json',
 		},
-		body : status
+		body : JSON.stringify(status)
 	});
 
 	if (!isValidResponseStatusCode(response.status)) {
