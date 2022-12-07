@@ -1,4 +1,4 @@
-FROM node:10.16.0
+FROM node:18.6
 MAINTAINER Rogier Slag
 
 RUN mkdir /opt/consuela
@@ -12,10 +12,10 @@ VOLUME /opt/consuela/config
 EXPOSE 8543
 
 # install dependencies
-ADD package.json /opt/consuela/package.json
-ADD yarn.lock /opt/consuela/yarn.lock
 ADD .babelrc /opt/consuela/.babelrc
 ADD .eslintrc /opt/consuela/.eslintrc
+ADD package.json /opt/consuela/package.json
+ADD yarn.lock /opt/consuela/yarn.lock
 RUN cd /opt/consuela && yarn install
 
 # Copy source

@@ -4,21 +4,21 @@
   "description": "Determine whether your PR is ready for merge, based on tags",
   "main": "src/server.js",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "config": "^3.1.0",
-    "express": "^4.17.3",
-    "parse-link-header": "^2.0.0",
-    "request": "^2.88.0"
+    "body-parser": "^1.20.1",
+    "config": "^3.3.8",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7",
+    "parse-link-header": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/cli": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0"
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/eslint-parser": "^7.19.1",
+    "eslint": "^8.29.0"
   },
   "scripts": {
-    "build": "npm run lint && babel --optional runtime src --out-dir out",
+    "build": "npm run lint && babel src --out-dir out",
     "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "babel-node src/server.js"

@@ -1,8 +1,6 @@
 import config from 'config';
-import request from 'request';
+import fetch from 'node-fetch';
 import parseLinkHeader from 'parse-link-header';
-
-import promisify from './promisify';
 
 export function isValidResponseStatusCode(code) {
 	return code >= 200 && code < 300;
@@ -11,38 +9,36 @@ export function isValidResponseStatusCode(code) {
 export async function setStatus(repo, sha, status) {
 	const url = `https://api.github.com/repos/${repo}/statuses/${sha}`;
 
-	const response = await promisify(cb => request.post({
-		url : url,
-		json : true,
+	const response = await fetch(url, {
+		method: 'post',
 		headers : {
 			'User-Agent' : 'Consuela https://github.com/rogierslag/consuela',
 			'Authorization' : `token ${config.get('github.oauth_token')}`
 		},
 		body : status
-	}, cb));
+	});
 
-	if (!isValidResponseStatusCode(response.statusCode)) {
+	if (!isValidResponseStatusCode(response.status)) {
 		throw response;
 	}
 
-	return response.body;
+	return await response.json();
 }
 
 export async function listLabels(repository, pullRequestNumber) {
 	const url = `https://api.github.com/repos/${repository}/issues/${pullRequestNumber}/labels`;
-	const response = await promisify(cb => request({
-		url : url,
-		json : true,
+	const response = await fetch(url, {
 		headers : {
 			'User-Agent' : 'Consuela https://github.com/rogierslag/consuela',
 			'Authorization' : 'token ' + config.get('github.oauth_token')
 		},
-	}, cb));
+	});
 
-	if(!isValidResponseStatusCode(response.statusCode)) {
+	if (!isValidResponseStatusCode(response.status)) {
 		throw response;
 	}
-	return response.body;
+
+	return await response.json();
 }
 
 export async function listPullRequestShas(repo) {
@@ -50,16 +46,15 @@ export async function listPullRequestShas(repo) {
 	let url = `https://api.github.com/repos/${repo}/pulls?per_page=10`;
 	let hasNext = true;
 	do {
-		const response = await promisify(cb => request({
-			url,
-			json : true,
+		const response = await fetch(url, {
 			headers : {
 				'User-Agent' : 'Consuela https://github.com/rogierslag/consuela',
 				'Authorization' : `token ${config.get('github.oauth_token')}`
 			}
-		}, cb));
+		});
+		const data = await response.json();
 
-		shas = shas.concat(response.body.map(pr => pr.head.sha));
+		shas = shas.concat(data.map(pr => pr.head.sha));
 
 		if (response.headers.link) {
 			const link = parseLinkHeader(response.headers.link);
