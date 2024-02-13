@@ -57,8 +57,9 @@ export async function listPullRequestShas(repo) {
 
 		shas = shas.concat(data.map(pr => pr.head.sha));
 
-		if (response.headers.link) {
-			const link = parseLinkHeader(response.headers.link);
+		const linkHeader= response.headers.get('link');
+		if (linkHeader) {
+			const link = parseLinkHeader(linkHeader);
 			if (link.next) {
 				url = link.next.url;
 			}
