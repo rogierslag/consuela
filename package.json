@@ -1,6 +1,6 @@
 {
   "name": "consuela",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Determine whether your PR is ready for merge, based on tags",
   "main": "src/server.js",
   "dependencies": {
