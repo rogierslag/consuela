@@ -1,4 +1,4 @@
-FROM node:18.6
+FROM node:24
 MAINTAINER Rogier Slag
 
 RUN mkdir /opt/consuela
@@ -16,7 +16,7 @@ ADD .babelrc /opt/consuela/.babelrc
 ADD .eslintrc /opt/consuela/.eslintrc
 ADD package.json /opt/consuela/package.json
 ADD yarn.lock /opt/consuela/yarn.lock
-RUN cd /opt/consuela && yarn install
+RUN cd /opt/consuela && yarn install --frozen-lockfile
 
 # Copy source
 COPY src /opt/consuela/src/
@@ -24,7 +24,7 @@ COPY src /opt/consuela/src/
 WORKDIR /opt/consuela
 # Build output
 RUN yarn build
+RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
 
 # Start it!
 CMD ["dumb-init", "node", "out/server.js"]
-
