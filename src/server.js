@@ -28,3 +28,28 @@ server.on('error', (e) => {
 		log.error('Something broke! Failed to start listening. Error was:', e);
 	}
 });
+
+function close() {
+	server.close();
+}
+
+process.on('exit', (code) => {
+	if (code) {
+		log.error(`Exiting with code ${code}`);
+	}
+	else {
+		log.info('Exited normally');
+	}
+});
+
+process.on('SIGINT', close);
+process.on('SIGTERM', close);
+
+process.on('uncaughtException', (err) => {
+	log.error('Got an uncaught exception, closing down', err);
+	close();
+});
+process.on('unhandledRejection', (err) => {
+	log.error('Got an unhandled promise rejection, closing down', err);
+	close();
+});
