@@ -1,5 +1,4 @@
 import config from 'config';
-import fetch from 'node-fetch';
 import parseLinkHeader from 'parse-link-header';
 
 export function isValidResponseStatusCode(code) {

@@ -3,9 +3,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import setUpRoutes from './routes';
+import setUpRoutes from './routes/index.js';
 
-import log from './log';
+import log from './log.js';
 
 // Create the server
 const app = express();

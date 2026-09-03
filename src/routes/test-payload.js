@@ -1,6 +1,6 @@
 import config from 'config';
 
-import log from '../log';
+import log from '../log.js';
 
 export default function (req, res, next) {
 	if (req.body.zen) {

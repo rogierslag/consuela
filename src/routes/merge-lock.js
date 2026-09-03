@@ -1,7 +1,7 @@
 import config from 'config';
 
-import {listPullRequestShas, setStatus} from '../api';
-import log from '../log';
+import {listPullRequestShas, setStatus} from '../api.js';
+import log from '../log.js';
 
 const sharedLock = {
 	lock : null
