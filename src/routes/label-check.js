@@ -1,8 +1,8 @@
 import config from 'config';
 
-import {listLabels, setStatus} from '../api';
-import sharedLock from './merge-lock';
-import log from '../log';
+import {listLabels, setStatus} from '../api.js';
+import sharedLock from './merge-lock.js';
+import log from '../log.js';
 
 const supportedActions = ['opened', 'labeled', 'unlabeled', 'synchronize'];
 

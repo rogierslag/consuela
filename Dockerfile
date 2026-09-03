@@ -1,4 +1,4 @@
-FROM node:24.8-alpine
+FROM node:24.20.0-alpine
 
 RUN addgroup -S -g 1024 javascript
 RUN adduser -D -S -u 1024 -G javascript -h /opt/consuela javascript
@@ -12,8 +12,7 @@ EXPOSE 8543
 # install dependencies
 WORKDIR /opt/consuela
 
-COPY --chown=javascript:javascript .babelrc .
-COPY --chown=javascript:javascript .eslintrc .
+COPY --chown=javascript:javascript eslint.config.js .
 COPY --chown=javascript:javascript package.json .
 COPY --chown=javascript:javascript yarn.lock .
 
@@ -28,4 +27,4 @@ COPY --chown=javascript:javascript src ./src
 RUN yarn build
 
 # Start it!
-CMD ["node", "out/server.js"]
+CMD ["node", "src/server.js"]
