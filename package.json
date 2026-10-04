@@ -20,8 +20,8 @@
   },
   "scripts": {
     "build": "npm run lint",
-    "lint": "eslint src test",
-    "test": "node --test test/*.test.js",
+    "lint": "eslint src",
+    "test": "eslint test && node --test test/*.test.js",
     "dev": "node --watch src/server.js"
   },
   "repository": {
