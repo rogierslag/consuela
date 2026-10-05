@@ -35,5 +35,8 @@ jobs:
       - name: Run build checks
         run: yarn build
 
+      - name: Run tests
+        run: yarn test
+
       - name: Build Docker image
         run: docker build --tag consuela:ci .
