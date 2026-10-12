@@ -91,7 +91,10 @@ export async function listPullRequestShas(repo) {
 			const link = parseLinkHeader(linkHeader);
 			if (link?.next) {
 				const next = new URL(link.next.url);
-				if (next.origin !== 'https://api.github.com' || next.pathname !== path || next.username || next.password || next.hash) {
+				// GitHub also returns canonical pagination paths using a numeric repository ID.
+				// The linked path is never fetched; only its page number is used below.
+				const validPath = next.pathname === path || /^\/repositories\/[1-9][0-9]*\/pulls$/.test(next.pathname);
+				if (next.origin !== 'https://api.github.com' || !validPath || next.username || next.password || next.hash) {
 					throw new TypeError('Invalid GitHub pagination URL');
 				}
 				const nextPage = positiveInteger(next.searchParams.get('page'));
