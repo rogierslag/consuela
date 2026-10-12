@@ -68,6 +68,23 @@ test('pagination rebuilds the same repository endpoint using only the next page'
 	]);
 });
 
+test('numeric repository pagination links rebuild requests for the original repository', async () => {
+	const urls = [];
+	globalThis.fetch = async url => {
+		urls.push(url);
+		const page = urls.length;
+		return response([{head: {sha: String(page).repeat(40)}}], page < 3
+			? `<https://api.github.com/repositories/27193779/pulls?per_page=10&page=${page + 1}>; rel="next", <https://api.github.com/repositories/27193779/pulls?per_page=10&page=3>; rel="last"`
+			: '<https://api.github.com/repositories/27193779/pulls?per_page=10&page=2>; rel="prev"');
+	};
+	assert.deepEqual(await listPullRequestShas('owner/repo'), ['1'.repeat(40), '2'.repeat(40), '3'.repeat(40)]);
+	assert.deepEqual(urls, [
+		'https://api.github.com/repos/owner/repo/pulls?per_page=10&page=1',
+		'https://api.github.com/repos/owner/repo/pulls?per_page=10&page=2',
+		'https://api.github.com/repos/owner/repo/pulls?per_page=10&page=3'
+	]);
+});
+
 test('unsafe pagination stops before a second authenticated request', async () => {
 	for (const next of [
 		'https://evil.test/repos/owner/repo/pulls?page=2',
@@ -81,7 +98,12 @@ test('unsafe pagination stops before a second authenticated request', async () =
 		'https://api.github.com/repos/owner/repo/pulls?page=NaN',
 		'https://api.github.com/repos/owner/repo/pulls?page=0',
 		'https://api.github.com/repos/owner/repo/pulls?page=1',
-		'https://api.github.com/repos/owner/repo/pulls?page=9007199254740992'
+		'https://api.github.com/repos/owner/repo/pulls?page=9007199254740992',
+		'https://evil.test/repositories/27193779/pulls?page=2',
+		'https://api.github.com/repositories/27193779/issues?page=2',
+		'https://api.github.com/repositories/abc/pulls?page=2',
+		'https://api.github.com/repositories/0/pulls?page=2',
+		'https://api.github.com/repositories/27193779/pulls?page=1'
 	]) {
 		let calls = 0;
 		globalThis.fetch = async () => {
